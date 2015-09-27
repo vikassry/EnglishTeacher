@@ -1,15 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var cool = require('cool-ascii-faces');
+var pg = require('pg');
 
 /* GET home page. */
+
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 router.get('/cool', function(req, res){
 	res.send(cool());
 });
 
-
-var pg = require('pg');
+router.get('/users', function(req, res, next) {
+  res.send('respond with a resource');
+});
 
 router.get('/db', function (request, response) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -18,13 +24,9 @@ router.get('/db', function (request, response) {
 			if (err)
 				{ console.error(err); response.send("Error " + err); }
 			else
-				{ response.send({results: result.rows}); }
+				response.send(result);
 		});
 	});
 })
-
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 module.exports = router;
